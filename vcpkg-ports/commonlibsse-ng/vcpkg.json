@@ -1,17 +1,16 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
-  "name": "commonlibf4-ng",
-  "version-string": "1.0.0",
-  "description": "A reverse engineered resource for developing F4SE plugins for Fallout 4",
-  "homepage": "https://github.com/alandtse/CommonLibF4",
+  "name": "commonlibsse-ng",
+  "version-semver": "3.7.0",
+  "port-version": 0,
+  "description": "A fork of CommonLibSSE with advanced features for modern SKSE development.",
+  "homepage": "https://github.com/CharmedBaryon/CommonLibSSE",
   "license": "MIT",
   "supports": "windows & x64",
   "dependencies": [
-    "boost-stl-interfaces",
-    "fmt",
     "rapidcsv",
-    "rsm-mmio",
     "spdlog",
+    "xbyak",
     {
       "name": "vcpkg-cmake-config",
       "host": true

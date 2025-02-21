@@ -44,34 +44,53 @@
       ]
     },
     {
-      "name": "f4se",
+      "name": "skse",
+      "hidden": true,
       "inherits": [
         "config-base-vcpkg",
         "config-base-cmake",
-        "config-base-ninja"
+        "config-base-msvc2022"
       ]
+    },
+    {
+      "name": "skse-debug",
+      "installDir": "output/Debug",
+      "inherits": [ "skse" ]
+    },
+    {
+      "name": "skse-release",
+      "installDir": "output/Release",
+      "inherits": [ "skse" ]
     }
   ],
   "buildPresets": [
     {
-      "name": "f4se-debug",
-      "configurePreset": "f4se",
+      "name": "skse-debug",
+      "configurePreset": "skse-debug",
       "configuration": "Debug",
-      "displayName": "F4SE Debug"
+      "displayName": "SKSE Debug"
     },
     {
-      "name": "f4se-release",
-      "configurePreset": "f4se",
+      "name": "skse-release",
+      "configurePreset": "skse-release",
       "configuration": "Release",
-      "displayName": "F4SE Release"
+      "displayName": "SKSE Release"
     }
   ],
   "packagePresets": [
     {
-      "name": "f4se",
-      "displayName": "Package F4SE",
-      "configurePreset": "f4se",
-      "packageDirectory": "${sourceDir}/bin/built-packages"
+      "name": "skse-debug",
+      "displayName": "Package SKSE debug",
+      "configurePreset": "skse-debug",
+      "configurations": [ "Debug" ],
+      "packageDirectory": "${sourceDir}/output/Debug"
+    },
+    {
+      "name": "skse-release",
+      "displayName": "Package SKSE release",
+      "configurePreset": "skse-release",
+      "configurations": ["Release"],
+      "packageDirectory": "${sourceDir}/output/Release"
     }
   ]
 }

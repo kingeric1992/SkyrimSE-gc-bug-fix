@@ -4,3 +4,5 @@
 
 # Artifacts
 bin/*
+output/*
+out/*

@@ -1,7 +1,7 @@
 #
 # Set up the source files and output library
 #
-set(CURRENT_PROJECT f4se_output_dll)
+set(CURRENT_PROJECT skse_output_dll)
 set(CURRENT_PROJECT_FRIENDLY_NAME "GCBugFix")
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
@@ -19,6 +19,18 @@ file(
 	"${SOURCE_DIR}/*.cpp"
 )
 
+configure_file(
+	"${SOURCE_DIR}/version.rc.in"
+	"${CMAKE_CURRENT_BINARY_DIR}/version.rc"
+	@ONLY
+
+)
+configure_file(
+	"${SOURCE_DIR}/version.h.in"
+	"${CMAKE_CURRENT_BINARY_DIR}/src/version.h"
+	@ONLY
+)
+
 source_group(
 	TREE "${SOURCE_DIR}/.."
 	FILES
@@ -31,6 +43,8 @@ add_library(
 	SHARED
 		${HEADER_FILES}
 		${SOURCE_FILES}
+		"${CMAKE_CURRENT_BINARY_DIR}/src/version.h"
+		"${CMAKE_CURRENT_BINARY_DIR}/version.rc"
 )
 
 target_precompile_headers(
@@ -43,6 +57,7 @@ target_include_directories(
 	${CURRENT_PROJECT}
 	PRIVATE
 		"${SOURCE_DIR}"
+		"${CMAKE_CURRENT_BINARY_DIR}/src/"
 )
 
 set_target_properties(
@@ -95,10 +110,6 @@ target_compile_definitions(
 		NOMINMAX
 		VC_EXTRALEAN
 		WIN32_LEAN_AND_MEAN
-
-		BUILD_PROJECT_NAME="${CURRENT_PROJECT_FRIENDLY_NAME}"
-		BUILD_VERSION_MAJOR=${CMAKE_PROJECT_VERSION_MAJOR}
-		BUILD_VERSION_MINOR=${CMAKE_PROJECT_VERSION_MINOR}
 )
 
 #
@@ -112,9 +123,9 @@ target_link_libraries(${CURRENT_PROJECT} PRIVATE spdlog::spdlog)
 find_package(xbyak CONFIG REQUIRED)
 target_link_libraries(${CURRENT_PROJECT} PRIVATE xbyak::xbyak)
 
-# CommonLibF4
-find_package(CommonLibF4 CONFIG REQUIRED)
-target_link_libraries(${CURRENT_PROJECT} PRIVATE CommonLibF4::CommonLibF4)
+# CommonLibSSE
+find_package(CommonLibSSE CONFIG REQUIRED)
+target_link_libraries(${CURRENT_PROJECT} PRIVATE CommonLibSSE::CommonLibSSE)
 
 #
 # Commands
@@ -126,6 +137,19 @@ if(NOT $ENV{GAME_ROOT_DIRECTORY} STREQUAL "")
 		COMMAND
 			"${CMAKE_COMMAND}" -E copy_if_different
 			"$<TARGET_FILE:${CURRENT_PROJECT}>"
-			"$ENV{GAME_ROOT_DIRECTORY}/Data/F4SE/Plugins/$<TARGET_FILE_NAME:${CURRENT_PROJECT}>"
+			"$ENV{GAME_ROOT_DIRECTORY}/Data/SKSE/Plugins/$<TARGET_FILE_NAME:${CURRENT_PROJECT}>"
 	)
 endif()
+
+add_custom_command(
+	TARGET ${CURRENT_PROJECT}
+	POST_BUILD
+	COMMAND
+		"${CMAKE_COMMAND}" -E copy_if_different
+		"$<TARGET_FILE:${CURRENT_PROJECT}>"
+		"${CMAKE_SOURCE_DIR}/output/$<CONFIG>/$<TARGET_FILE_NAME:${CURRENT_PROJECT}>"
+	COMMAND
+		"${CMAKE_COMMAND}" -E copy_if_different
+		"${PROJECT_RESOURCES_PATH}/GCBugFix.ini"
+		"${CMAKE_SOURCE_DIR}/output/$<CONFIG>/GCBugFix.ini"
+)

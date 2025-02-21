@@ -1,8 +1,8 @@
 #pragma once
 
 #pragma warning(push)
-#include "F4SE/F4SE.h"
-#include "RE/Fallout.h"
+#include "SKSE/SKSE.h"
+#include "RE/Skyrim.h"
 
 #ifdef NDEBUG
 #	include <spdlog/sinks/basic_file_sink.h>
@@ -15,7 +15,7 @@
 
 #define DLLEXPORT __declspec(dllexport)
 
-namespace logger = F4SE::log;
+namespace logger = SKSE::log;
 
 using namespace std::literals;
 
@@ -40,7 +40,7 @@ auto WriteHookWithReturn(REL::ID ID, size_t ByteCopyCount, Func Dest)
 	Patch p(target.address(), ByteCopyCount);
 	p.ready();
 
-	auto& trampoline = F4SE::GetTrampoline();
+	auto& trampoline = SKSE::GetTrampoline();
 	trampoline.write_branch<5>(target.address(), Dest);
 
 	auto alloc = trampoline.allocate(p.getSize());
